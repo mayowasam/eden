@@ -1,27 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* @import url('./_fonts/cabinetgrotesk/css/cabinet-grotesk.css'); */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background-rgb: 253, 251, 245, 1;
+  --color-rgb: 2, 2, 2, 1
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
   }
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: rgb(var(--background-rgb));
+  color: rgb(var(--color-rgb));
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+@layer utilities {
+  .section-min-height {
+    min-height: calc(100vh - 68px);
+  }
+
+  .toggle-btn {
+    @apply [&>div::before]:translate-y-0 [&>div::before]:rotate-45 [&>div::after]:translate-y-0 [&>div::after]:-rotate-45 [&>div]:bg-transparent
+  }
+
+}
+
+
+.ant-dropdown-menu-submenu-title {
+  display: flex;
+  align-items: center;
+}
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.logo .ant-upload-wrapper .ant-upload-drag{
+  background: none !important;
+  border: none !important;
+}
+
+.ant-carousel .slick-next, .ant-carousel .slick-prev{
+  color: #4DAE37 !important;
+}
+
+.ant-carousel .slick-next::after, .ant-carousel .slick-prev::after{
+  border-inline-start-width: 4px !important;
+  border-block-start-width: 4px !important
 }

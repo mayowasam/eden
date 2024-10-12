@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["omitApi"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  DECLINED
+  DISBURSED
+}
+
+enum ROLE {
+  USER  @map("users")
+  ADMIN @map("admins")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  name       String
+  phone      String    @unique
+  password   String
+  created_at DateTime  @default(now()) @db.Timestamptz
+  updated_at DateTime  @updatedAt @db.Timestamptz
+  Session    Session[]
+  role       ROLE      @default(USER)
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  price       Int
+  quantity    Int
+  image       String?
+  rating      Int
+  type        String?
+  created_at  DateTime @default(now()) @db.Timestamptz
+  updated_at  DateTime @updatedAt @db.Timestamptz
+}
+
+model Item {
+  id            Int          @id @default(autoincrement())
+  name          String
+  description   String
+  price         Int
+  quantity      Int
+  total         Int
+  Transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  transactionId Int?
+  product_id     Int
+  product_info  Json?        @db.JsonB
+}
+
+model Transaction {
+  id         Int      @id @default(autoincrement())
+  reference  String   @default(cuid())
+  status     Status   @default(PENDING)
+  name       String
+  total      Int
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+  items      Item[]
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
